@@ -37,3 +37,9 @@ Projenin ihtiyaç duyduğu kütüphaneleri requirements.txt dosyası ile tek kom
 # venv\Scripts\activate
 
 pip install -r requirements.txt
+
+
+
+Kullanım
+Kurulum tamamlandıktan sonra, projeyi çalıştırmak için ana dizinde aşağıdaki komutu kullanın:
+python main.py
