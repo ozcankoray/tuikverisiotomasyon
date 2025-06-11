@@ -4,7 +4,6 @@
 
 TÜİK Veri Portalı'ndan otomatik olarak veri indiren, işleyen ve birleştiren bir Python otomasyon aracıdır. Bu araç, manuel veri toplama sürecini ortadan kaldırarak araştırmacılar ve veri analistleri için zaman tasarrufu sağlamak üzere tasarlanmıştır.
 
-
 ---
 
 ## Ana Özellikler
@@ -22,32 +21,39 @@ TÜİK Veri Portalı'ndan otomatik olarak veri indiren, işleyen ve birleştiren
 
 Projeyi çalıştırmak için makinenizde Python 3.9 veya üstü bir sürümün kurulu olması gerekmektedir.
 
-**1. Proje Dosyalarını İndirin**
+### 1. Proje Dosyalarını İndirin
 
 ```bash
 git clone https://github.com/ozcankoray/tuikverisiotomasyon.git
 cd tuikverisiotomasyon
+```
 
+### 2. Bağımlılıkları Yükleyin
 
+Projenin ihtiyaç duyduğu kütüphaneleri `requirements.txt` dosyası ile tek komutta yükleyin:
 
-2. Bağımlılıkları Yükleyin
-Projenin ihtiyaç duyduğu kütüphaneleri requirements.txt dosyası ile tek komutta yükleyin:
+```bash
 # Bir sanal ortam oluşturup aktif etmeniz önerilir (opsiyonel)
 # python -m venv venv
 # venv\Scripts\activate
 
 pip install -r requirements.txt
+```
 
+## Kullanım
 
-
-Kullanım
 Kurulum tamamlandıktan sonra, projeyi çalıştırmak için ana dizinde aşağıdaki komutu kullanın:
+
+```bash
 python main.py
-
-
+```
 
 Program, size işlemek istediğiniz kategorileri soran bir menü sunacaktır. Seçiminizi yaptıktan sonra süreç otomatik olarak başlayacaktır.
-Çıktı
-İşlem tamamlandığında, sonuçlar output klasörü içinde, seçtiğiniz her kategori için ayrı bir Birlestirilmis_{KategoriAdı}.xlsx dosyası olarak oluşturulur.
-Yapılandırma
-Tüm temel ayarlar ve kategori listesi config/settings.py dosyası içinde yer almaktadır. Yeni bir kategori eklemek veya mevcut yolları değiştirmek için bu dosyayı düzenleyebilirsiniz.
+
+## Çıktı
+
+İşlem tamamlandığında, sonuçlar `output` klasörü içinde, seçtiğiniz her kategori için ayrı bir `Birlestirilmis_{KategoriAdı}.xlsx` dosyası olarak oluşturulur.
+
+## Yapılandırma
+
+Tüm temel ayarlar ve kategori listesi `config/settings.py` dosyası içinde yer almaktadır. Yeni bir kategori eklemek veya mevcut yolları değiştirmek için bu dosyayı düzenleyebilirsiniz.
