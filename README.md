@@ -30,9 +30,11 @@ cd tuikverisiotomasyon
 
 
 ---
+---
 
 
-**2. Bağımlılıkları Yükleyin** 
+**2. Bağımlılıkları Yükleyin**
+
 Projenin ihtiyaç duyduğu kütüphaneleri requirements.txt dosyası ile tek komutta yükleyin:
 # Bir sanal ortam oluşturup aktif etmeniz önerilir (opsiyonel)
 # python -m venv venv
