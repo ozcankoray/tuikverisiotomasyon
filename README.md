@@ -43,3 +43,11 @@ pip install -r requirements.txt
 Kullanım
 Kurulum tamamlandıktan sonra, projeyi çalıştırmak için ana dizinde aşağıdaki komutu kullanın:
 python main.py
+
+
+
+Program, size işlemek istediğiniz kategorileri soran bir menü sunacaktır. Seçiminizi yaptıktan sonra süreç otomatik olarak başlayacaktır.
+Çıktı
+İşlem tamamlandığında, sonuçlar output klasörü içinde, seçtiğiniz her kategori için ayrı bir Birlestirilmis_{KategoriAdı}.xlsx dosyası olarak oluşturulur.
+Yapılandırma
+Tüm temel ayarlar ve kategori listesi config/settings.py dosyası içinde yer almaktadır. Yeni bir kategori eklemek veya mevcut yolları değiştirmek için bu dosyayı düzenleyebilirsiniz.
