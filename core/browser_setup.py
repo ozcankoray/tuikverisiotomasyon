@@ -1,42 +1,53 @@
+# core/browser_setup.py dosyasının GÜNCEL içeriği
+
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options  # <-- YENİ İMPORT
 from webdriver_manager.chrome import ChromeDriverManager
-from config import settings
+
+from config import settings  # <-- YENİ İMPORT: İndirme klasörü yolunu almak için
 
 
-def setup_driver():
+def setup_driver() -> webdriver.Chrome:
     """
-    Selenium WebDriver'ı yapılandırılmış seçeneklerle kurar ve başlatır.
+    Chrome WebDriver'ı "headless" modda ve gerekli ayarlar yapılmış olarak başlatır.
     """
-    print("Selenium WebDriver hazırlanıyor...")
+    print("Chrome WebDriver 'headless' (görünmez) modda başlatılıyor...")
 
-    chrome_options = webdriver.ChromeOptions()
+    # --- YENİ BÖLÜM: Chrome Seçeneklerini Yapılandırma ---
+    chrome_options = Options()
 
-    # Chrome tercihlerini (preferences) ayarlamak için bir sözlük oluşturuyoruz.
+    # 1. Headless modu etkinleştir. "new" argümanı modern ve daha stabil bir headless deneyimi sunar.
+    chrome_options.add_argument("--headless=new")
+
+    # 2. Grafik işlemci birimini (GPU) devre dışı bırak. Headless modda hataları önler.
+    chrome_options.add_argument("--disable-gpu")
+
+    # 3. Sayfa düzeninin bozulmaması için sanal pencere boyutunu belirle.
+    chrome_options.add_argument("--window-size=1920,1080")
+
+    # 4. (EN ÖNEMLİSİ) Headless modda dosya indirebilmek için ayar yap.
+    #    'prefs' ayarı ile Chrome'a dosyaları nereye, sormadan indirmesi gerektiğini söylüyoruz.
     prefs = {
-        "download.default_directory": str(settings.DOWNLOADS_DIR),  # İndirme yolunu belirt
-        "download.prompt_for_download": False,  # Her indirme için onay isteme
+        "download.default_directory": str(settings.DOWNLOADS_DIR),  # Ayarlardan gelen indirme klasörü yolu
+        "download.prompt_for_download": False,  # İndirme için onay isteme
         "download.directory_upgrade": True,
-        "safebrowsing.enabled": True,  # Güvenli taramayı etkinleştir
-
-        # --- YENİ VE EN ÖNEMLİ AYAR ---
-        # "Birden çok dosya indirme" iznini otomatik olarak vermek için.
-        # Bu ayar, Chrome'un gösterdiği "İzin ver / Engelle" penceresini tamamen engeller.
-        "profile.default_content_setting_values.automatic_downloads": 1
+        "safebrowsing.enabled": True
     }
     chrome_options.add_experimental_option("prefs", prefs)
+    # --- YENİ BÖLÜM SONU ---
 
-    # Tarayıcının tam ekran başlaması için
-    chrome_options.add_argument("--start-maximized")
+    # WebDriver'ı güncellenmiş seçeneklerle başlat
+    service = Service(ChromeDriverManager().install())
 
-    # (İsteğe Bağlı) Script'i arkaplanda (GUI olmadan) çalıştırmak isterseniz aşağıdaki satırı aktif edin.
-    # chrome_options.add_argument("--headless")
-
-    # WebDriver'ı otomatik olarak yönetecek servisi kur
-    service = ChromeService(executable_path=ChromeDriverManager().install())
-
-    # Ayarlanmış seçenekler ve servis ile WebDriver'ı başlat
+    # <-- DEĞİŞTİ: `options` parametresi eklendi
     driver = webdriver.Chrome(service=service, options=chrome_options)
-    print("WebDriver başarıyla başlatıldı.")
 
+    # Headless modda indirmelerin çalışması için bu ek komut gereklidir.
+    driver.command_executor._commands["send_command"] = ("POST", '/session/$sessionId/chromium/send_command')
+    params = {'cmd': 'Page.setDownloadBehavior',
+              'params': {'behavior': 'allow', 'downloadPath': str(settings.DOWNLOADS_DIR)}}
+    driver.execute("send_command", params)
+
+    print("WebDriver başarıyla yapılandırıldı.")
     return driver

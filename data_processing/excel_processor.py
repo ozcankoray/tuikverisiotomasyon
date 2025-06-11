@@ -1,8 +1,10 @@
+# data_processing/excel_processor.py dosyasının GÜNCEL içeriği
+
 import pandas as pd
 import os
 from config import settings
 
-
+# ... _find_header_row ve _auto_fit_columns fonksiyonlarınız aynı kalabilir ...
 def _find_header_row(file_path: str, engine: str, keywords: list, max_rows_to_scan: int = 20) -> int:
     """Bir Excel dosyasında, belirtilen anahtar kelimeleri içeren başlık satırını bulur."""
     try:
@@ -23,15 +25,17 @@ def _auto_fit_columns(worksheet):
         worksheet.column_dimensions[column_cells[0].column_letter].width = length + 2
 
 
-def process_and_merge_all_excels():
+# <-- DEĞİŞTİ: Fonksiyon artık kaynak ve hedef yollarını parametre olarak alıyor.
+def process_and_merge_all_excels(source_directory: str, output_filepath: str):
     """
-    'downloads' klasöründeki tüm Excel dosyalarını işler ve her birini
-    tek bir ana dosyanın FARKLI ve BENZERSİZ SAYFALARINA yazar.
+    Belirtilen klasördeki tüm Excel dosyalarını işler ve her birini
+    tek bir ana dosyanın FARKLI SAYFALARINA yazar.
     """
     print(f"\n{'=' * 20} EXCEL İŞLEME VE SAYFALARA YAZMA İŞLEMİ BAŞLADI {'=' * 20}")
 
-    downloads_path = settings.DOWNLOADS_DIR
-    output_file_path = settings.OUTPUT_DIR / settings.FINAL_EXCEL_NAME
+    # <-- DEĞİŞTİ: Değişkenler artık parametrelerden geliyor.
+    downloads_path = source_directory
+    output_file_path = output_filepath
 
     excel_files = [f for f in os.listdir(downloads_path) if f.endswith(('.xls', '.xlsx')) and not f.startswith('~')]
     if not excel_files:
@@ -40,33 +44,28 @@ def process_and_merge_all_excels():
 
     try:
         with pd.ExcelWriter(output_file_path, engine='openpyxl') as writer:
-            sheet_counter = 1  # Benzersiz sayfa adı için sayaç
+            sheet_counter = 1
             for filename in excel_files:
                 file_path = os.path.join(downloads_path, filename)
                 print(f"  -> İşleniyor: {filename}")
 
                 try:
-                    # --- YENİ: Akıllı motor seçimi ---
                     engine_to_use = None
                     if filename.lower().endswith('.xls'):
                         engine_to_use = 'xlrd'
                     elif filename.lower().endswith('.xlsx'):
                         engine_to_use = 'openpyxl'
                     else:
-                        continue  # Eğer excel dosyası değilse atla
+                        continue
 
-                    # --- YENİ: Benzersiz ve kısa sayfa adı oluşturma ---
-                    base_name = os.path.splitext(filename)[0]
-                    # Sayfa adını "Sıra No - Dosya Adı" formatında yapıp kısaltıyoruz
-                    temp_sheet_name = f"{sheet_counter} - {base_name}"
-                    sheet_name = temp_sheet_name[:31]  # Excel 31 karakter limitine uy
+                    temp_sheet_name = f"{sheet_counter} - {os.path.splitext(filename)[0]}"
+                    sheet_name = temp_sheet_name[:31]
                     sheet_counter += 1
 
                     header_keywords = ['Yıl', 'Ay', 'Dönem', 'Tarih', 'Endeks', 'Değişim', 'Year', 'Month']
                     header_row_index = _find_header_row(file_path, engine=engine_to_use, keywords=header_keywords)
 
                     df = pd.read_excel(file_path, header=header_row_index, engine=engine_to_use)
-
                     df.dropna(how='all', axis=0, inplace=True)
                     df.dropna(how='all', axis=1, inplace=True)
 
