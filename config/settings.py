@@ -1,33 +1,28 @@
-# config/settings.py dosyasının GÜNCEL içeriği
-
 from pathlib import Path
 
 # Projenin ana dizinini referans noktası olarak al
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# --- YENİ BÖLÜM: Çıktı klasörünü kullanıcının "İndirilenler" klasörü olarak ayarla ---
-# Bu, farklı işletim sistemlerinde (Windows, macOS, Linux) sorunsuz çalışır.
+# Kullanıcının standart "İndirilenler" klasörünü bul (Tüm işletim sistemlerinde çalışır)
 DOWNLOADS_DIR_USER = Path.home() / "Downloads"
 
-# Geçici indirme ve log klasörleri projenin içinde kalmaya devam etsin
+# Uygulama içi geçici klasörler
 DOWNLOADS_DIR = BASE_DIR / "downloads"
 LOGS_DIR = BASE_DIR / "logs"
 
-# <-- DEĞİŞTİ: OUTPUT_DIR artık kullanıcının İndirilenler klasörünü gösteriyor.
-OUTPUT_DIR = DOWNLOADS_DIR_USER 
+# === ANA ÇIKTI KLASÖRÜ ===
+# Oluşturulan Excel dosyaları doğrudan kullanıcının İndirilenler klasörüne kaydedilecek.
+OUTPUT_DIR = DOWNLOADS_DIR_USER
 
-# Eğer İndirilenler klasörü yoksa (çok nadir bir durum), program çökmesin diye oluştur.
-OUTPUT_DIR.mkdir(exist_ok=True) 
-
-# --- BÖLÜM SONU ---
-
-# Sonuç Excel dosyasının temel adı
-FINAL_EXCEL_NAME = "Birlestirilmis.xlsx"
+# İndirilenler klasörünün var olduğundan emin ol (genellikle hep vardır)
+OUTPUT_DIR.mkdir(exist_ok=True)
 
 # Tarayıcı bekleme süresi (saniye)
 WAIT_TIMEOUT = 15
 
-# İşlem yapılacak TÜİK kategorileri ve API ID'leri
+# === KATEGORİ AYARLARI ===
+
+# İşlem yapılacak tüm TÜİK kategorileri ve API ID'leri
 CATEGORIES_TO_PROCESS = {
     "Adalet_ve_Secim": "110",
     "Bilim_Teknoloji_ve_Bilgi_Toplumu": "102",
@@ -46,4 +41,15 @@ CATEGORIES_TO_PROCESS = {
     "Ticaret_ve_Hizmet": "115",
     "Ulastirma_ve_Haberlesme": "112",
     "Ulusal_Hesaplar": "113",
+}
+
+# --- YENİ BÖLÜM: 2 Aylık Veri Penceresi Gerektiren Kategori ID'leri ---
+# Bu sette bulunan kategori ID'leri için program, hem bir önceki ayı hem de
+# iki önceki ayı kontrol edecektir.
+TWO_MONTH_WINDOW_CATEGORY_IDS = {
+    "104",  # Dış Ticaret
+    "116",  # İnşaat ve Konut
+    "108",  # İstihdam, İşsizlik ve Ücret
+    "114",  # Sanayi
+    "115",  # Ticaret ve Hizmet
 }
