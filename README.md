@@ -27,3 +27,13 @@ Projeyi çalıştırmak için makinenizde Python 3.9 veya üstü bir sürümün 
 ```bash
 git clone https://github.com/ozcankoray/tuikverisiotomasyon.git
 cd tuikverisiotomasyon
+
+
+
+2. Bağımlılıkları Yükleyin
+Projenin ihtiyaç duyduğu kütüphaneleri requirements.txt dosyası ile tek komutta yükleyin:
+# Bir sanal ortam oluşturup aktif etmeniz önerilir (opsiyonel)
+# python -m venv venv
+# venv\Scripts\activate
+
+pip install -r requirements.txt
