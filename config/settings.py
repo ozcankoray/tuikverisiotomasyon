@@ -1,9 +1,33 @@
+# config/settings.py dosyasının GÜNCEL içeriği
+
 from pathlib import Path
 
-# --- PROJE KÖK DİZİNİ ---
-# Bu dosyanın (settings.py) bulunduğu konumdan iki üst dizine çıkarak ana proje klasörünü buluruz.
-ROOT_DIR = Path(__file__).resolve().parent.parent
+# Projenin ana dizinini referans noktası olarak al
+BASE_DIR = Path(__file__).resolve().parent.parent
 
+# --- YENİ BÖLÜM: Çıktı klasörünü kullanıcının "İndirilenler" klasörü olarak ayarla ---
+# Bu, farklı işletim sistemlerinde (Windows, macOS, Linux) sorunsuz çalışır.
+DOWNLOADS_DIR_USER = Path.home() / "Downloads"
+
+# Geçici indirme ve log klasörleri projenin içinde kalmaya devam etsin
+DOWNLOADS_DIR = BASE_DIR / "downloads"
+LOGS_DIR = BASE_DIR / "logs"
+
+# <-- DEĞİŞTİ: OUTPUT_DIR artık kullanıcının İndirilenler klasörünü gösteriyor.
+OUTPUT_DIR = DOWNLOADS_DIR_USER 
+
+# Eğer İndirilenler klasörü yoksa (çok nadir bir durum), program çökmesin diye oluştur.
+OUTPUT_DIR.mkdir(exist_ok=True) 
+
+# --- BÖLÜM SONU ---
+
+# Sonuç Excel dosyasının temel adı
+FINAL_EXCEL_NAME = "Birlestirilmis.xlsx"
+
+# Tarayıcı bekleme süresi (saniye)
+WAIT_TIMEOUT = 15
+
+# İşlem yapılacak TÜİK kategorileri ve API ID'leri
 CATEGORIES_TO_PROCESS = {
     "Adalet_ve_Secim": "110",
     "Bilim_Teknoloji_ve_Bilgi_Toplumu": "102",
@@ -23,18 +47,3 @@ CATEGORIES_TO_PROCESS = {
     "Ulastirma_ve_Haberlesme": "112",
     "Ulusal_Hesaplar": "113",
 }
-
-# --- KLASÖR YOLLARI ---
-DOWNLOADS_DIR = ROOT_DIR / "downloads"
-OUTPUT_DIR = ROOT_DIR / "output"
-LOGS_DIR = ROOT_DIR / "logs"
-
-# --- URL'LER ---
-TUIK_BASE_URL = "https://data.tuik.gov.tr/"
-
-# --- SELENIUM AYARLARI ---
-# Elementlerin bulunması için beklenecek maksimum süre (saniye)
-WAIT_TIMEOUT = 20
-
-# --- ÇIKTI DOSYASI AYARLARI ---
-FINAL_EXCEL_NAME = "Birlestirilmis.xlsx"
