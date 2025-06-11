@@ -1,3 +1,5 @@
+# data_processing/file_handler.py dosyasının GÜNCEL içeriği
+
 import os
 import shutil
 import time
@@ -15,40 +17,42 @@ def clean_directory(directory_path):
 def wait_and_rename_newest_file(directory_path: str, category_name: str, files_before_download: list,
                                 timeout: int = 60):
     """
-    Belirtilen klasörde YENİ bir dosyanın indirilmesini bekler ve onu yeniden adlandırır.
-
-    Args:
-        directory_path (str): İndirme klasörünün yolu.
-        category_name (str): Dosyaya verilecek temel ad.
-        files_before_download (list): İndirme başlamadan önce klasördeki dosyaların listesi.
-        timeout (int): Beklenecek maksimum saniye.
+    Belirtilen klasörde YENİ bir EXCEL dosyasının indirilmesini bekler ve onu yeniden adlandırır.
+    .htm gibi sahte dosyaları görmezden gelir.
     """
     start_time = time.time()
-    print("Yeni dosya indirme işleminin tamamlanması bekleniyor...")
+    print("Yeni Excel dosyası indirme işleminin tamamlanması bekleniyor...")
 
     while time.time() - start_time < timeout:
         current_files = os.listdir(directory_path)
-        # İndirme öncesi listede olmayan YENİ dosyaları bul
         new_files = [f for f in current_files if f not in files_before_download]
 
-        if new_files:
-            # Yeni dosyalar içinde, indirmesi tamamlanmış olanı (geçici olmayan) bul
-            for new_file in new_files:
-                if not new_file.endswith(('.crdownload', '.tmp')):
-                    time.sleep(1)  # Dosyanın tam yazıldığından emin olmak için kısa bekleme
+        # <-- DEĞİŞTİ: Artık sadece .xls ve .xlsx uzantılı dosyalara odaklanıyoruz.
+        for new_file in new_files:
+            # Sadece gerçek Excel dosyalarını dikkate al, diğer her şeyi görmezden gel.
+            if new_file.lower().endswith(('.xls', '.xlsx')) and not new_file.startswith('~'):
 
-                    original_filepath = os.path.join(directory_path, new_file)
+                # Dosyanın diske tam yazılması için kısa bir güvenlik beklemesi
+                time.sleep(1)
 
-                    # Dosya adını temizle ve uzantısını koru
-                    safe_name = "".join(c for c in category_name if c.isalnum() or c in (' ', '_')).rstrip()
-                    file_extension = os.path.splitext(new_file)[1]
-                    new_filename = f"{safe_name}{file_extension}"
-                    new_filepath = os.path.join(directory_path, new_filename)
+                original_filepath = os.path.join(directory_path, new_file)
 
+                # Bazen dosya bulunamaz hatası almamak için varlığını tekrar kontrol et
+                if not os.path.exists(original_filepath):
+                    continue
+
+                safe_name = "".join(c for c in category_name if c.isalnum() or c in (' ', '_')).rstrip()
+                file_extension = os.path.splitext(new_file)[1]
+                new_filename = f"{safe_name}{file_extension}"
+                new_filepath = os.path.join(directory_path, new_filename)
+
+                try:
                     os.rename(original_filepath, new_filepath)
-
                     print(f"Dosya başarıyla indirildi ve yeniden adlandırıldı: '{new_filename}'")
                     return  # Görev tamamlandı, fonksiyondan çık
+                except OSError as e:
+                    print(f"Yeniden adlandırma sırasında bir hata oluştu: {e}. Dosya atlanıyor.")
+                    return
 
         time.sleep(0.5)
 
