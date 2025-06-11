@@ -5,8 +5,6 @@
 
 TÜİK Veri Portalı'ndan otomatik olarak veri indiren, işleyen ve birleştiren bir Python otomasyon aracıdır. Bu araç, manuel veri toplama sürecini ortadan kaldırarak araştırmacılar ve veri analistleri için zaman tasarrufu sağlamak üzere tasarlanmıştır.
 
-![Uygulama Demosu](https://user-images.githubusercontent.com/10940562/228994793-17b5e4c0-2e45-429a-8a1a-463d11b156b2.gif)
-*(Not: Bu bir örnek GIF'tir. Kendi projenizin ekran kaydını ekleyebilirsiniz.)*
 
 ---
 
