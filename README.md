@@ -27,7 +27,7 @@ Projeyi çalıştırmak için makinenizde Python 3.9 veya üstü bir sürümün 
 ```bash
 git clone https://github.com/ozcankoray/tuikverisiotomasyon.git
 cd tuikverisiotomasyon
-
+```bash
 ---
 
 **2. Bağımlılıkları Yükleyin** 
