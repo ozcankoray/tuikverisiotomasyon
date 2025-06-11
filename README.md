@@ -1,7 +1,6 @@
 # TÜİK Veri Otomasyon Aracı
 
 ![Python](https://img.shields.io/badge/Python-3.9%2B-blue.svg)
-![License](https://img.shields.io/badge/License-MIT-green.svg)
 
 TÜİK Veri Portalı'ndan otomatik olarak veri indiren, işleyen ve birleştiren bir Python otomasyon aracıdır. Bu araç, manuel veri toplama sürecini ortadan kaldırarak araştırmacılar ve veri analistleri için zaman tasarrufu sağlamak üzere tasarlanmıştır.
 
